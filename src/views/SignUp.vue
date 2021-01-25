@@ -1,13 +1,22 @@
 <template>
   <div>
-    <h1>SignUp</h1>
+    <h1 class='wrapp'> SignUp</h1>
+    
   </div>
 </template>
 
 <script>
 export default {
   name: "SignUp",
-};
+  data() {
+    return {
+      name: "",
+      age: 0,
+    };
+  },
+}
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+
+</style>

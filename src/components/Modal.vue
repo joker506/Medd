@@ -1,6 +1,8 @@
 <template>
   <div>
     <h1>Modal</h1>
+    <!-- <pre>{{ $v.emailPass }}</pre> -->
+
     <div class="container d-flex">
       <div class="popup-p modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -19,84 +21,145 @@
             </button>
           </div>
           <div class="modal-body">
-            <form>
+            <form @submit.prevent="onSubmit" novalidate>
               <div class="form-group">
-                <label
-                  :style="[
-                    phoneClick
-                      ? {
-                          color: 'green',
-                        }
-                      : { color: 'red' },
-                  ]"
-                  @click="
-                    (phoneClick = !phoneClick), (emailClick = !emailClick)
-                  "
-                  for="exampleInputPhone"
-                >
-                  by Mobile Phone</label
-                >
-                <label
-                  :style="[
-                    emailClick
-                      ? {
-                          color: 'green',
-                        }
-                      : { color: 'red' },
-                  ]"
-                  @click="
-                    (emailClick = !emailClick), (phoneClick = !phoneClick)
-                  "
-                  for="exampleInputEmail1"
-                  >Email address</label
-                >
-
+                <div class="label__wrap d-flex justify-content-around">
+                  <label
+                    :style="[
+                      phoneClick
+                        ? {
+                            color: 'green',
+                          }
+                        : { color: 'red' },
+                    ]"
+                    @click="
+                      (phoneClick = !phoneClick), (emailClick = !emailClick)
+                    "
+                    for="exampleInputPhone"
+                  >
+                    by Mobile Phone</label
+                  >
+                  <label
+                    :style="[
+                      emailClick
+                        ? {
+                            color: 'green',
+                          }
+                        : { color: 'red' },
+                    ]"
+                    @click="
+                      (emailClick = !emailClick), (phoneClick = !phoneClick)
+                    "
+                    for="exampleInputEmail1"
+                    >Email address</label
+                  >
+                </div>
                 <input
                   v-if="emailClick"
                   v-model="email"
+                  @blur="$v.email.$touch()"
+                  :class="{ 'is-invalid': $v.email.$error }"
                   type="email"
-                  class="form-control"
+                  class="form-control "
                   id="exampleInputEmail1"
                   aria-describedby="emailHelp"
                   placeholder="Enter email"
                 />
+
                 <input
                   v-else
                   v-model="phone"
-                  type="phone"
+                  type="tel"
                   class="form-control"
+                  @blur="$v.phone.$touch()"
+                  :class="{ 'is-invalid': $v.phone.$error }"
                   id="exampleInputPhone"
                   aria-describedby="phoneHelp"
                   placeholder="Enter phone"
                 />
-                <small
-                  v-if="emailClick"
-                  id="emailHelp"
-                  class="form-text text-muted"
-                  >We'll never share your email with anyone else.</small
+
+                <span
+                  v-if="!$v.email.required && emailClick === true"
+                  class="invalid-feedback"
                 >
-                <small v-else id="phonelHelp" class="form-text text-muted"
-                  >We'll never share your phone with anyone else.</small
+                  Please choose a email!
+                </span>
+                <span
+                  v-if="!$v.email.email && emailClick === true"
+                  class="invalid-feedback"
                 >
+                  Bad email!
+                </span>
+
+                <span
+                  v-if="!$v.phone.required && phoneClick === true"
+                  class="invalid-feedback"
+                >
+                  Please choose a phone!
+                </span>
+                <span
+                  v-if="!$v.phone.containsNumber && phoneClick === true"
+                  class="invalid-feedback"
+                >
+                  Bad phone! <br />format 123-456-7899
+                </span>
+                <!-- <span
+                  v-if="!$v.phone.minLength && phoneClick === true"
+                  class="invalid-feedback"
+                >
+                  MinLength-10
+                </span> -->
               </div>
               <div class="form-group">
                 <label for="exampleInputPassword1">Password</label>
                 <input
                   v-if="emailClick"
                   v-model="emailPass"
+                  @blur="$v.emailPass.$touch()"
+                  :class="{ 'is-invalid': $v.emailPass.$error }"
                   type="password"
                   class="form-control"
                   id="exampleInputPassword1"
                   placeholder="Password"
                 />
+
                 <input
                   v-else
                   v-model="phonePass"
+                  @blur="$v.phonePass.$touch()"
+                  :class="{ 'is-invalid': $v.phonePass.$error }"
                   type="password"
                   class="form-control"
-                  id="exampleInputPassword1"
+                  id="exampleInputPassword2"
                   placeholder="Password P"
                 />
+                <span
+                  v-if="!$v.emailPass.required && emailClick === true"
+                  class="invalid-feedback"
+                >
+                  Password required
+                </span>
+                <span
+                  v-if="!$v.emailPass.minLength && emailClick === true"
+                  class="invalid-feedback"
+                >
+                  Password minLength 6
+                </span>
+                <span
+                  v-if="!$v.phonePass.required && phoneClick === true"
+                  class="invalid-feedback"
+                >
+                  Password required
+                </span>
+                <span
+                  v-if="!$v.phonePass.minLength && phoneClick === true"
+                  class="invalid-feedback"
+                >
+                  Password minLength 6
+                </span>
+                <!-- <small class="error" v-if="!$v.password.$error">
+                  Field is required
+                </small> -->
               </div>
               <div class="form-check">
                 <input
@@ -108,13 +171,31 @@
                   >Check me out</label
                 >
               </div>
-              <button type="submit" class="btn btn-primary">Submit</button>
+              <button
+                v-if="emailClick"
+                type="submit"
+                :disabled="$v.email.$invalid || $v.emailPass.$invalid"
+                class="btn btn-lg btn-success col-12"
+              >
+                Submit
+              </button>
+              <button
+                v-else
+                type="submit"
+                :disabled="$v.phone.$invalid || $v.phonePass.$invalid"
+                class="btn btn-lg btn-success col-12"
+                to=""
+              >
+                Submit
+              </button>
             </form>
           </div>
           <div class="modal-footer">
-            <router-link class="btn btn-primary" to="/signup">
-              Sign up for new user
-            </router-link>
+            <p @click="closeModal">
+              <router-link class="btn btn-primary" to="/signup">
+                Sign up for new user
+              </router-link>
+            </p>
           </div>
         </div>
       </div>
@@ -123,6 +204,7 @@
 </template>
 
 <script>
+import { required, email, minLength } from "vuelidate/lib/validators";
 export default {
   name: "Modal",
   data() {
@@ -137,6 +219,54 @@ export default {
       activeIndex: -1,
     };
   },
+  validations: {
+    email: {
+      email,
+      required,
+    },
+    phone: {
+      required,
+      containsNumber: function(value) {
+        return /[0-9]{3}-[0-9]{3}-[0-9]{4}/.test(value);
+      },
+      minLength: minLength(6),
+    },
+    phonePass: {
+      required,
+      minLength: minLength(6), // I assume you'd want something like this too
+      // containsNumber: function(value) {
+      //   return /[[0-9]{3}-[0-9]{3}-[0-9]{4}]/.test(value);
+      // },
+      // containsUppercase: function(value) {
+      //   return /[A-Z]/.test(value);
+      // },
+      // containsLowercase: function(value) {
+      //   return /[a-z]/.test(value);
+      // },
+      // containsNumber: function(value) {
+      //   return /[0-9]/.test(value);
+      // },
+      // containsSpecial: function(value) {
+      //   return /[#?!@$%^&*-]/.test(value);
+      // },
+    },
+    emailPass: {
+      required,
+      minLength: minLength(6), // I assume you'd want something like this too
+      // containsUppercase: function(value) {
+      //   return /[A-Z]/.test(value);
+      // },
+      // containsLowercase: function(value) {
+      //   return /[a-z]/.test(value);
+      // },
+      // containsNumber: function(value) {
+      //   return /[0-9]/.test(value);
+      // },
+      // containsSpecial: function(value) {
+      //   return /[#?!@$%^&*-]/.test(value);
+      // },
+    },
+  },
   props: {
     popTitle: {
       type: String,
@@ -144,6 +274,9 @@ export default {
     },
   },
   methods: {
+    onSubmit() {
+      console.log("s");
+    },
     closeModal() {
       this.$emit("closeModal");
       //this.modalShow = !this.modalShow;
