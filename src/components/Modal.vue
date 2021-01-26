@@ -1,16 +1,23 @@
 <template>
   <div>
-    <h1>Modal</h1>
     <!-- <pre>{{ $v.emailPass }}</pre> -->
-
-    <div class="container d-flex">
-      <div class="popup-p modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title text-center" id="exampleModalLongTitle">
-              Login In
+    <div class="container d-flex modal__wrap">
+      <div
+        class="popup-p modal-dialog modal-dialog-centered"
+        role="document"
+        style="max-width:600px"
+      >
+        <div class="modal-content bg-white border-0">
+          <div
+            class="modal-header justify-content-center align-items-center border-0"
+          >
+            <h5
+              class="modal-title text-center mt-md-3 mb-md-3"
+              id="exampleModalLongTitle"
+            >
+              Log In
             </h5>
-            <button
+            <!-- <button
               @click="closeModal"
               type="button"
               class="close"
@@ -18,17 +25,19 @@
               aria-label="Close"
             >
               <span aria-hidden="true">&times;</span>
-            </button>
+            </button> -->
           </div>
-          <div class="modal-body">
+          <div class="modal-body border-0">
             <form @submit.prevent="onSubmit" novalidate>
               <div class="form-group">
-                <div class="label__wrap d-flex justify-content-around">
+                <div class="label__wrap d-flex ">
                   <label
+                    class=" col-md-4 p-md-3 font-weight-bold"
                     :style="[
                       phoneClick
                         ? {
-                            color: 'green',
+                            color: 'rgba(0, 203, 173, 1)',
+                            borderBottom: '3px solid',
                           }
                         : { color: 'red' },
                     ]"
@@ -40,10 +49,12 @@
                     by Mobile Phone</label
                   >
                   <label
+                    class="col-md-4 p-md-3 font-weight-bold "
                     :style="[
                       emailClick
                         ? {
-                            color: 'green',
+                            color: 'rgba(0, 203, 173, 1)',
+                            borderBottom: '3px solid',
                           }
                         : { color: 'red' },
                     ]"
@@ -51,16 +62,17 @@
                       (emailClick = !emailClick), (phoneClick = !phoneClick)
                     "
                     for="exampleInputEmail1"
-                    >Email address</label
+                    >by Email</label
                   >
                 </div>
+
                 <input
                   v-if="emailClick"
                   v-model="email"
                   @blur="$v.email.$touch()"
                   :class="{ 'is-invalid': $v.email.$error }"
                   type="email"
-                  class="form-control "
+                  class="input__param form-control p-md-3"
                   id="exampleInputEmail1"
                   aria-describedby="emailHelp"
                   placeholder="Enter email"
@@ -70,7 +82,7 @@
                   v-else
                   v-model="phone"
                   type="tel"
-                  class="form-control"
+                  class="input__param p-md-3 form-control"
                   @blur="$v.phone.$touch()"
                   :class="{ 'is-invalid': $v.phone.$error }"
                   id="exampleInputPhone"
@@ -110,15 +122,15 @@
                   MinLength-10
                 </span> -->
               </div>
-              <div class="form-group">
-                <label for="exampleInputPassword1">Password</label>
+              <div class="form-group mt-md-4">
+                <!-- <label for="exampleInputPassword1">Password</label> -->
                 <input
                   v-if="emailClick"
                   v-model="emailPass"
                   @blur="$v.emailPass.$touch()"
                   :class="{ 'is-invalid': $v.emailPass.$error }"
                   type="password"
-                  class="form-control"
+                  class="input__param form-control"
                   id="exampleInputPassword1"
                   placeholder="Password"
                 />
@@ -129,7 +141,7 @@
                   @blur="$v.phonePass.$touch()"
                   :class="{ 'is-invalid': $v.phonePass.$error }"
                   type="password"
-                  class="form-control"
+                  class="input__param form-control"
                   id="exampleInputPassword2"
                   placeholder="Password P"
                 />
@@ -161,38 +173,60 @@
                   Field is required
                 </small> -->
               </div>
-              <div class="form-check">
+              <!-- <div class="form-check">
                 <input
                   type="checkbox"
-                  class="form-check-input"
+                  class="form-check-input "
                   id="exampleCheck1"
                 />
-                <label class="form-check-label" for="exampleCheck1"
+                <label class="form-check-label " for="exampleCheck1"
                   >Check me out</label
                 >
-              </div>
+              </div> -->
               <button
                 v-if="emailClick"
                 type="submit"
                 :disabled="$v.email.$invalid || $v.emailPass.$invalid"
-                class="btn btn-lg btn-success col-12"
+                class="btn btn__modal btn-lg text-white rounded mt-md-4 col-12"
+                :style="[
+                  disabled
+                    ? {
+                        backgroundColor: 'rgba(0, 203, 173, 0.3)',
+                      }
+                    : { backgroundColor: 'rgba(0, 203, 173, 1)' },
+                ]"
               >
-                Submit
+                Continue
               </button>
               <button
                 v-else
                 type="submit"
                 :disabled="$v.phone.$invalid || $v.phonePass.$invalid"
-                class="btn btn-lg btn-success col-12"
                 to=""
+                class="btn btn__modal btn-lg text-white rounded mt-md-4 col-12"
+                :style="[
+                  disabled
+                    ? {
+                        backgroundColor: 'rgba(0, 203, 173, 0.3)',
+                      }
+                    : { backgroundColor: 'rgba(0, 203, 173, 1)' },
+                ]"
               >
-                Submit
+                Continue
               </button>
             </form>
           </div>
-          <div class="modal-footer">
+          <div class="modal-footer border-0 justify-content-center">
+            <p>
+              <span class="px-1">Forgot your password?</span
+              ><span class="px-1">
+                <a style="color:#00CBAD" href="/"
+                  >Send email with linkfor reset password</a
+                >
+              </span>
+            </p>
             <p @click="closeModal">
-              <router-link class="btn btn-primary" to="/signup">
+              <router-link class="new__user" to="/signup">
                 Sign up for new user
               </router-link>
             </p>
@@ -296,11 +330,41 @@ export default {
 
 <style lang="scss" scoped>
 @import "../scss/variables";
+
 .modal-content {
+  width: 580px;
   height: 527px;
-  width: 560px;
-  left: 20px;
-  top: 20px;
-  border-radius: 0px;
+  // left: 20px;
+  // top: 20px;
+  border-radius: 3%;
+}
+
+.modal-title {
+  font-family: Lato;
+  font-size: 26px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 38px;
+  //letter-spacing: 0.10000000149011612px;
+  text-align: left;
+}
+.input__param {
+  //styleName: FormFields / FieldPlaceholder;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 16px;
+  text-align: left;
+  height: 58px;
+}
+.new__user {
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 22px;
+  color: #00cbad;
+}
+@media (max-width: 576px) {
+  .modal-content {
+    max-width: 320px;
+  }
 }
 </style>
