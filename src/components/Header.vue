@@ -26,6 +26,13 @@
             <li class="nav-item active">
               <a
                 class=" btn btn-outline-secondary btn-lg rounded px-5 mr-md-1"
+                href="/main"
+                >Look up Catalog <span class="sr-only">(current)</span></a
+              >
+            </li>
+            <li class="nav-item active">
+              <a
+                class=" btn btn-outline-secondary btn-lg rounded px-5 mr-md-1"
                 href="#"
                 @click="visible = !visible"
                 >Log in <span class="sr-only">(current)</span></a
